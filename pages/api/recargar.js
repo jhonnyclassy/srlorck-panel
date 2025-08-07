@@ -1,8 +1,7 @@
 // Forzando redeploy con comentario
 
-import { supabase } from '../../../lib/supabaseClient';
+import { supabase } from '@/lib/supabaseClient';
 
-export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { clienteId, monto } = req.body;
 
