@@ -1,31 +1,27 @@
 import { useState } from 'react';
-import { supabase } from '../lib/supabaseClient';
 
 export default function RegistroCliente() {
   const [nombre, setNombre] = useState('');
   const [correo, setCorreo] = useState('');
   const [mensaje, setMensaje] = useState('');
 
-  const handleSubmit = async (e) => {
+  const manejarEnvio = async (e) => {
     e.preventDefault();
 
-    const { error } = await supabase
-      .from('clientes')
-      .insert([{ nombre, correo }]);
+    const res = await fetch('/api/registro', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre, correo }),
+    });
 
-    if (error) {
-      setMensaje('❌ Error: ' + error.message);
-    } else {
-      setMensaje('✅ Cliente registrado con éxito');
-      setNombre('');
-      setCorreo('');
-    }
+    const data = await res.json();
+    setMensaje(data.mensaje || data.error);
   };
 
   return (
-    <div style={{ padding: 20 }}>
+    <div>
       <h1>Registro de Cliente</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={manejarEnvio}>
         <input
           type="text"
           placeholder="Nombre"
